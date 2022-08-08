@@ -37,7 +37,7 @@
             <td>{{$candidato->ASPIRANTE}}</td>
             <td>{{$candidato->CANDIDATO_ID}}</td>
             <td>
-                <a href="{{ url('/candidato/'.$candidato->id.'/show') }}" title="Ver candidato" class="btn btn-warning" >
+                <a href="{{ url('/candidato/'.$candidato->id) }}" title="Ver candidato" class="btn btn-primary" >
                     Ver  
               </a>
             <a href="{{ url('/candidato/'.$candidato->id.'/edit') }}" class="btn btn-warning" >

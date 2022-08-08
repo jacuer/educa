@@ -16,7 +16,7 @@ use App\Http\Controllers\VotoController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/home', function () {
     return view('auth.login');
 });
 

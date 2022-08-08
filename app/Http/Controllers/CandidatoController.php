@@ -17,7 +17,7 @@ class CandidatoController extends Controller
     public function index()
     {
         //
-        $datos['candidatos']=Candidato::paginate(4);
+        $datos['candidatos']=Candidato::paginate(6);
         return view('candidato.index',$datos);
     }
 

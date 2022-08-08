@@ -39,6 +39,6 @@
      {{--    @endforeach --}}
     </tbody>
 </table>
-{{ $candidatos->links() }}
+{{-- {{ $candidato->links() }} --}}
 </div>
 @endsection
