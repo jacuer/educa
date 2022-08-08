@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Candidato;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage; //esta clase me permite elimnar recursos de storage fotos, archivos
+
 
 class CandidatoController extends Controller
 {
@@ -15,6 +17,8 @@ class CandidatoController extends Controller
     public function index()
     {
         //
+        $datos['candidatos']=Candidato::paginate(4);
+        return view('candidato.index',$datos);
     }
 
     /**
@@ -25,6 +29,8 @@ class CandidatoController extends Controller
     public function create()
     {
         //
+        return view('candidato.create');
+
     }
 
     /**
@@ -36,6 +42,31 @@ class CandidatoController extends Controller
     public function store(Request $request)
     {
         //
+        //
+        $campos = [
+            'NAME'=>'required|string|max:100',
+            'ASPIRANTE'=>'required|string|max:100',
+            'CANDIDATO_ID'=>'required|string|max:3',
+            'FOTO'=>'required|max:10000|mimes:jpeg,png,jpg',
+
+        ];
+        $mensaje=[
+            'required'=>'El :atributo es requerido',
+            'FOTO.required'=>'La foto es requerida',
+        ];
+        
+        $this->validate($request, $campos, $mensaje);
+
+        $datosCandidato = request()->except('_token');
+
+        if($request->hasFile('FOTO')){
+
+            $datosCandidato['FOTO']=$request->file('FOTO')->store('uploads', 'public');
+        }
+
+        Candidato::insert($datosCandidato);
+        //return response()->json($datosEmpleado);
+        return redirect('candidato')->with('mensaje','Candidato agregado con éxito');
     }
 
     /**
@@ -44,9 +75,12 @@ class CandidatoController extends Controller
      * @param  \App\Models\Candidato  $candidato
      * @return \Illuminate\Http\Response
      */
-    public function show(Candidato $candidato)
+    public function show($id)
     {
         //
+        $candidatos = Candidato::findOrFail($id);
+        return view('candidato.show')->with('candidato',$candidatos);
+
     }
 
     /**
@@ -55,9 +89,11 @@ class CandidatoController extends Controller
      * @param  \App\Models\Candidato  $candidato
      * @return \Illuminate\Http\Response
      */
-    public function edit(Candidato $candidato)
+    public function edit($id)
     {
         //
+        $candidato = Candidato::findOrFail($id);
+        return view('candidato.edit', compact('candidato'));
     }
 
     /**
@@ -67,9 +103,42 @@ class CandidatoController extends Controller
      * @param  \App\Models\Candidato  $candidato
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Candidato $candidato)
+    public function update(Request $request, $id)
     {
         //
+        $campos = [
+            'NAME'=>'required|string|max:100',
+            'ASPIRANTE'=>'required|string|max:100',
+            'CANDIDATO_ID'=>'required|string|max:3',
+
+        ];
+        $mensaje=[
+            'require'=>'El :atributo es requerido'
+        ];
+        
+        if($request->hasFile('FOTO')){
+            $campos = ['FOTO'=>'required|max:10000|mimes:jpeg,png,jpg'];
+            $mensaje=['FOTO.required'=>'La foto es requerida'];
+        }
+
+
+        $this->validate($request, $campos, $mensaje);
+        
+        $datosCandidato = request()->except(['_token','_method']);
+
+        if($request->hasFile('FOTO')){
+            
+            $candidato = Candidato::findOrFail($id);
+            Storage::delete('public/'.$candidato->FOTO);
+
+            $datosCandidato['FOTO']=$request->file('FOTO')->store('uploads', 'public');
+        }
+
+        Candidato::where('id','=',$id)->update($datosCandidato);
+
+        $candidato = Candidato::findOrFail($id);
+        //return view('empleado.edit', compact('empleado'));
+        return redirect('candidato')->with('mensaje','Candidato modificado');
     }
 
     /**
@@ -78,8 +147,17 @@ class CandidatoController extends Controller
      * @param  \App\Models\Candidato  $candidato
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Candidato $candidato)
+    public function destroy($id)
     {
         //
+        $candidato = Candidato::findOrFail($id);
+
+        if(Storage::delete('public/'.$candidato->FOTO)){
+            
+            Candidato::destroy($id);
+        }
+
+        return redirect('candidato')->with('mensaje','candidato borrado');
+        
     }
 }

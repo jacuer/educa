@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Voto;
+use App\Models\Candidato;
+use Illuminate\Support\Facades\Storage; //esta clase me permite elimnar recursos de storage fotos, archivos
+
 use Illuminate\Http\Request;
 
 class VotoController extends Controller
@@ -15,6 +18,9 @@ class VotoController extends Controller
     public function index()
     {
         //
+        $datos['candidatos'] = Candidato::paginate(4);
+        return view('voto.index',$datos);
+        
     }
 
     /**

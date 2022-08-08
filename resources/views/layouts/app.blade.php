@@ -33,6 +33,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('alumno.index') }}">{{ __('Alumnos') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('candidato.index') }}">{{ __('Candidatos') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('voto.index') }}">{{ __('Voto') }}</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

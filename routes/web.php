@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AlumnoController;
+use App\Http\Controllers\CandidatoController;
+use App\Http\Controllers\VotoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,9 @@ Route::get('/', function () {
 Route::get('/alumno/create', [AlumnoController::class,'create']); */
 
 Route::resource('alumno',AlumnoController::class)->middleware('auth');
+Route::resource('candidato',CandidatoController::class)->middleware('auth');
+Route::resource('voto',VotoController::class)->middleware('auth');
+
 Auth::routes(['register'=>false, 'reset'=>false]);
 
 Route::get('/home', [AlumnoController::class, 'index'])->name('home');
